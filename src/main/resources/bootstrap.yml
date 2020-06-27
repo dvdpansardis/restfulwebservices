@@ -1,0 +1,9 @@
+spring:
+  output:
+    ansi:
+      enabled: DETECT
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  messages:
+    basename: messages

@@ -1,0 +1,6 @@
+logging:
+  level:
+#    root: TRACE
+    web: TRACE
+#    org.springframework.web: TRACE
+#    org.hibernate: INFO
