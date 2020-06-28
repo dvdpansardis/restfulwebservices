@@ -4,11 +4,8 @@ logging:
     web: TRACE
 #    org.springframework.web: TRACE
 #    org.hibernate: INFO
-swagger:
-  api:
-    title: App-Swagger2-Demo
-    description: Swagger Demo
-    termsOfServiceUrl: http://blog.anishpanthi.net
-    version: 1.0
-    controller:
-      basepackage: com.app.boot.swagger2.controller
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
