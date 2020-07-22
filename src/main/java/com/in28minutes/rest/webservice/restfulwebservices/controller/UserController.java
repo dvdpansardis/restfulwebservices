@@ -1,7 +1,9 @@
 package com.in28minutes.rest.webservice.restfulwebservices.controller;
 
 import com.in28minutes.rest.webservice.restfulwebservices.exception.UserNotFoundException;
+import com.in28minutes.rest.webservice.restfulwebservices.model.Post;
 import com.in28minutes.rest.webservice.restfulwebservices.model.User;
+import com.in28minutes.rest.webservice.restfulwebservices.repository.PostRepository;
 import com.in28minutes.rest.webservice.restfulwebservices.repository.UserRepository;
 import com.in28minutes.rest.webservice.restfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class UserController {
     private final UserService userService;
 
     private final UserRepository userRepository;
+
+    private final PostRepository postRepository;
 
     @GetMapping
     public List<User> findAll() {
@@ -87,6 +90,37 @@ public class UserController {
         Optional<User> user = userRepository.findById(id);
         userRepository.delete(user.get());
         //userService.delete(id);
+    }
+
+    @GetMapping("/{id}/posts")
+    public List<Post> findPosts(@PathVariable("id") final Integer id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+
+        if(!user.isPresent()) {
+            throw new UserNotFoundException("id=" + id);
+        }
+
+        return user.get().getPosts();
+    }
+    @PostMapping("/{id}/posts")
+    public ResponseEntity<Post> createPost(@PathVariable("id") final Integer id,
+                                             @RequestBody Post post) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isEmpty()) {
+            throw new UserNotFoundException("id=" + id);
+        }
+
+        post.setUser(user.get());
+        Post saved = postRepository.save(post);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 }
 

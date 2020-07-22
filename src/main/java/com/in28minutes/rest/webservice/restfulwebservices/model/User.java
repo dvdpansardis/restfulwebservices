@@ -1,5 +1,6 @@
 package com.in28minutes.rest.webservice.restfulwebservices.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class User {
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Post> posts;
 
 }
